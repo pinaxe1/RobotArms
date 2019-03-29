@@ -3,11 +3,10 @@ Derived from Small Hammer SNAM500 4DOF robot arm software
 https://smallhammer.cc/product/snarm500/
 https://smallhammer.cc/docs/snam500/arduino-code/
 Covered by LGPL license
-
 */
 
 #include "VarSpeedServo.h"
-
+int pace =10; // Speed for stepper motors. 0 - Unlimited 1- Lowest ... to Highest -255 
 VarSpeedServo servo1;
 VarSpeedServo servo2;
 VarSpeedServo servo3;
@@ -49,10 +48,10 @@ void loop()
   { char ch = Serial.read();
     switch(ch) {
      case '0'...'9':  v = v * 10 + ch - '0';    break;
-     case 'a':  if(mode==1) servo1.write(v,10); break;
-     case 'b':  if(mode==1) servo2.write(v,10); break;
-     case 'c':  if(mode==1) servo3.write(v,10); break;
-     case 'd':  if(mode==1) servo4.write(v,10); break;
+     case 'a':  if(mode==1) servo1.write(v,pace); break;
+     case 'b':  if(mode==1) servo2.write(v,pace); break;
+     case 'c':  if(mode==1) servo3.write(v,pace); break;
+     case 'd':  if(mode==1) servo4.write(v,pace); break;
      case 'm':  Serial.print("Mode = pot  "); Serial.println(mode); break;
      case 'n':  Serial.print("Mode = pc   "); Serial.println(mode); break;
     }
@@ -64,28 +63,28 @@ void loop()
     /////爪舵机控制///////
     val1 = analogRead(potpin1);
     val1 = map (val1, 0, 1023, 122, 160);
-    servo1.write(val1);
+    servo1.write(val1,pace);
     delay(10);
 
 
     //////小臂舵机控制///////
     val2 = analogRead(potpin2);
     val2 = map (val2, 0, 1023, 0, 179);
-    servo2.write(val2);
+    servo2.write(val2,pace);
     delay(10);  
 
     //////大臂舵机控制///////
     val3 = analogRead(potpin3);
     val3 = map (val3, 0, 1023, 0, 179);
-    servo3.write(val3);
+    servo3.write(val3,pace);
     delay(10);
 
     //////爪舵机控制/////// 
     val4 = analogRead(potpin4);
     val4 = map (val4, 0, 1023, 40, 179);
-    servo4.write(val4);
+    servo4.write(val4,pace);
     delay(10);
-    
+    /*
     Serial.print(val1); 
     Serial.print(" ") ;
     Serial.print(val2); 
@@ -94,9 +93,6 @@ void loop()
     Serial.print(" ") ;
     Serial.print(val4); 
     Serial.println(" "); 
-    
+    */
   }
-
-
-
 }
