@@ -24,18 +24,21 @@ int val3;
 int val4;
 
 byte  mode ;
-void setup()
+
+void setup()  ////////////////////////////////////////////////////////////////////////////////////////
 {
 
-  servo1.attach(11);               
-  servo2.attach(10);  
-  servo3.attach(9);               
-  servo4.attach(6);
+  servo1.attach(11);  servo1.write(140);
+  servo2.attach(10);  servo2.write(140);
+  servo3.attach(9);   servo3.write(140);            
+  servo4.attach(6);   servo4.write(140); 
+  
 
 
   Serial.begin(9600);
 }
-void loop()
+
+void loop() //////////////////////////////////////////////////////////////////////////////////////////
 {
   static int v = 0;
   static int s1 = 0;
@@ -43,23 +46,20 @@ void loop()
   static int s3 = 0;
   static int s4 = 0;
 
-  if ( Serial.available()) 
-
-  { char ch = Serial.read();
+  if ( Serial.available()) {
+    char ch = Serial.read();
     switch(ch) {
-     case '0'...'9':  v = v * 10 + ch - '0';    break;
-     case 'a':  if(mode==1) servo1.write(v,pace); break;
-     case 'b':  if(mode==1) servo2.write(v,pace); break;
-     case 'c':  if(mode==1) servo3.write(v,pace); break;
-     case 'd':  if(mode==1) servo4.write(v,pace); break;
-     case 'm':  Serial.print("Mode = pot  "); Serial.println(mode); break;
-     case 'n':  Serial.print("Mode = pc   "); Serial.println(mode); break;
+      case '1'...'9':  v =(ch-'0')*20;    break;
+      case 'a':  if(mode==1) servo1.write(v,pace); break;
+      case 'b':  if(mode==1) servo2.write(v,pace); break;
+      case 'c':  if(mode==1) servo3.write(v,pace); break;
+      case 'd':  if(mode==1) servo4.write(v,pace); break;
+      case 'm':  mode=0; Serial.print("Mode = pot  "); Serial.println(mode); break;
+      case 'n':  mode=1; Serial.print("Mode = pc   "); Serial.println(mode); break;
     }
   }
 
-  if(mode==0)
-
-  {
+  if(mode==0)  {
     /////爪舵机控制///////
     val1 = analogRead(potpin1);
     val1 = map (val1, 0, 1023, 122, 160);
@@ -84,15 +84,15 @@ void loop()
     val4 = map (val4, 0, 1023, 40, 179);
     servo4.write(val4,pace);
     delay(10);
-    /*
+   
     Serial.print(val1); 
-    Serial.print(" ") ;
+    Serial.print("a ") ;
     Serial.print(val2); 
-    Serial.print(" ") ;
+    Serial.print("b ") ;
     Serial.print(val3); 
-    Serial.print(" ") ;
+    Serial.print("c ") ;
     Serial.print(val4); 
-    Serial.println(" "); 
-    */
+    Serial.println("d "); 
+  
   }
 }
