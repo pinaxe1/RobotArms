@@ -24,6 +24,7 @@ int val3;
 int val4;
 
 byte  mode ;
+boolean modep=true;
 
 void setup()  ////////////////////////////////////////////////////////////////////////////////////////
 {
@@ -48,14 +49,19 @@ void loop() ////////////////////////////////////////////////////////////////////
 
   if ( Serial.available()) {
     char ch = Serial.read();
+    Serial.print(ch);
     switch(ch) {
       case '1'...'9':  v =(ch-'0')*20;    break;
       case 'a':  if(mode==1) servo1.write(v,pace); break;
       case 'b':  if(mode==1) servo2.write(v,pace); break;
       case 'c':  if(mode==1) servo3.write(v,pace); break;
       case 'd':  if(mode==1) servo4.write(v,pace); break;
-      case 'm':  mode=0; Serial.print("Mode = pot  "); Serial.println(mode); break;
-      case 'n':  mode=1; Serial.print("Mode = pc   "); Serial.println(mode); break;
+      case 'm':  mode=0;  Serial.print("Mode = pot  "); Serial.println(mode); break;
+      case 'n':  mode=1;  Serial.print("Mode = pc   "); Serial.println(mode); break;
+      case 'o':  modep=!modep; Serial.print("Mode = o"); Serial.println(modep); break;
+      
+      default :  Serial.println("-illegal. Use 1..9 a b c d m n o");
+
     }
   }
 
@@ -75,24 +81,35 @@ void loop() ////////////////////////////////////////////////////////////////////
 
     //////大臂舵机控制///////
     val3 = analogRead(potpin3);
-    val3 = map (val3, 0, 1023, 0, 179);
+    val3 = map (val3, 0, 1023, 40, 179);
     servo3.write(val3,pace);
     delay(10);
 
     //////爪舵机控制/////// 
     val4 = analogRead(potpin4);
-    val4 = map (val4, 0, 1023, 40, 179);
+    val4 = map (val4, 0, 1023, 0, 180);
     servo4.write(val4,pace);
     delay(10);
-   
-    Serial.print(val1); 
-    Serial.print("a ") ;
-    Serial.print(val2); 
-    Serial.print("b ") ;
-    Serial.print(val3); 
-    Serial.print("c ") ;
-    Serial.print(val4); 
-    Serial.println("d "); 
-  
+    if (modep){
+     Serial.print(val1); Serial.print("a ") ;
+     Serial.print(val2); Serial.print("b ") ;
+     Serial.print(val3); Serial.print("c ") ;
+     Serial.print(val4); Serial.println("d "); 
+   }
   }
 }
+
+/*
+  /------- "a" claw "6a" claw open "8a" claw closed
+ |  /----- "b" elbow "2b" elbow folded "7b" unfolded but depends on "c" position  
+ | |  /--- "c" shoulde "2c" shoulder folded "9c" unfolded
+ | | |  /- "d" mount rotation "1d" right position "9d" left position.
+8a7b6c7d
+8a7b6c7d
+8a7b6c7d
+8a7b2c7d - closed folded 
+6a7b6c7d - opnen T
+8a7b6c7d - close T
+
+*/
+
