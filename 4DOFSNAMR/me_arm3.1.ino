@@ -74,7 +74,8 @@ void readComSwitchModes(char ch){ //////////////////////////////////////////////
     case 'm':  mode=0;  Serial.print("Mode = pot  "); Serial.println(mode); v=0; break;
     case 'n':  mode=1;  Serial.print("Mode = pc   "); Serial.println(mode); v=0; break;
     case 'o':  modep=!modep; Serial.print("Mode = o"); Serial.println(modep); v=0; break;
-    case 'p':  Serial.print("Dance "); v=0; Dance(); break;
+    case 'p':  Serial.print("Dance "); v=0; Dance(); break;    
+    case 't':  delay(v*100); v=0; break;
     case ' ':  v=0; Serial.println(); break; // skip "sp" do nothing
     default :  Serial.println("-illegal. Use 1..9 a b c d m n o");
   }
@@ -125,36 +126,36 @@ void sendCommands( String data){
 }
 
 void Dance(){
-  sendCommands("120a ");delay(1000);        // drop
-  sendCommands("77b 75c ");delay(1000);       // retract
-  sendCommands("120a 76b 171c 78d ");delay(2000);//go to first station
-  sendCommands("160a ");delay(1000);          //grab
-  sendCommands("77b 75c ");delay(2000);      // retract
-  sendCommands("0d ");delay(2000);          //turn to second station
-  sendCommands("46b 155c 0d ");delay(2000);//down to second station
-  sendCommands("120a ");delay(1000);      //drop
-  sendCommands("75c ");delay(1000);      //Rretract arm
-  sendCommands("46b 155c 0d ");delay(2000);//go to second station
-  sendCommands("160a ");delay(1000);      //grab
-  sendCommands("75c ");delay(1000);      //Rretract arm
-  sendCommands("76b 171c 78d ");delay(2000);//go to first station
-  sendCommands("120a ");delay(1000);       // drop
-  sendCommands("77b 75c ");delay(1000);   //Rretract arm
+  sendCommands("120a t10");        // drop
+  sendCommands("77b 75c t10");    // retract
+  sendCommands("120a 76b 171c 78d t20");//go to first station
+  sendCommands("160a t10");            //grab
+  sendCommands("77b 75c t20");        // retract
+  sendCommands("0d  t20");           //turn to second station
+  sendCommands("46b 155c 0d t20");  //down to second station
+  sendCommands("120a t10");        //drop
+  sendCommands("75c t10");        //Rretract arm
+  sendCommands("46b 155c 0dt20");//go to second station
+  sendCommands("160a t10");     //grab
+  sendCommands("75c t10");     //Rretract arm
+  sendCommands("76b 171c 78d t20");//go to first station
+  sendCommands("120a t10");       // drop
+  sendCommands("77b 75c t10");   //Rretract arm
 }
 
 /*
 Some commands
 160a5t80a5t160a  click da beak
-40b 90c 2t
+40b 90c 2t       wouldn't reach the floor
 
-35b 96c  2t
-44b 100c 2t
-56b 110c 2t
-68b 120c 2t
-80b 130c 2t
-90b 140c 2t
-104b 150c 2t
-113b 160c 2t
+35b 96c  2t      nearest reachable point
+44b 100c 2t      100c point
+56b 110c 2t      110c each next 10 degrees c
+68b 120c 2t      next 10 degrees c  
+80b 130c 2t      next 10 degrees c
+90b 140c 2t      next 10 degrees c  
+104b 150c 2t     next 10 degrees c
+113b 160c 2t     last reachable point
 
 110b105b100c44b79b130c120b160c110b115b112b130b170c165c170c175c160c170c90c44b40b44b100c
 50b45b43b42b40b44b58b110c70b120c79b130c90b140c105b150c112b160c90c
