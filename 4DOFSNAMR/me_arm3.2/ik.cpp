@@ -54,8 +54,8 @@ bool cosangle(float opp, float adj1, float adj2, float& theta)
 
 float norm( float a){ //normalize angles to 0-Pi range
   float angle=a;
-  if (angle<0 ) angle+=PI ;
-  if (angle>PI) angle-=PI ;
+   if (angle<0 ) angle*=-1 ;
+   if (angle>PI) angle=2*PI-angle ;
   return angle;
 }
 
